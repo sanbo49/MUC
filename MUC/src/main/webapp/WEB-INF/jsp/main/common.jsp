@@ -16,11 +16,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 
 <!-- jqueryPage.js -->
-<script type="text/javascript" language="javascript" src="static/js/jqueryPage.js"></script>
-
-<!-- pagination 
+<script type="text/javascript" language="javascript" src="static/js/pagination/jqueryPage.js"></script>
 <link rel="stylesheet" type="text/css" href="static/js/pagination/pagination.css"/>
-<script type="text/javascript" language="javascript" src="static/js/pagination/jquery.pagination.js"></script>
--->
 <!-- jQuery-Templates -->
 <script type="text/javascript" language="javascript" src="static/js/jQuery-Templates/jquery.tmpl.min.js"></script>

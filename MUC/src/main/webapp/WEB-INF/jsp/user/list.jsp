@@ -6,20 +6,7 @@
 <title>DouPHP 管理中心 - 自定义导航栏 </title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
  <c:import url="/common" />
- 
- 
- <style>
-.pager{height:25px;line-height:20px;font-size: 12px;margin: 10px 0px;text-align: center;color: #2E6AB1;overflow: hidden;}
-.pager .disabled{border:1px solid #A8A8A8;color:#A8A8A8;margin:0px 5px;padding:5px 8px;text-decoration: none;}
-.pager .current{border:1px solid #A8A8A8;color:#A8A8A8;margin:0px 5px;padding:5px 8px;text-decoration: none;}
-.pager a{border:1px solid #9AAFE5;color:#2E6AB1;margin:0px 5px;padding:5px 8px;text-decoration: none;}
-.pager a.hover,.pager a.active{background-color:#2E6AB1;border-color:#000080;color:#FFF;}
-.pager a.disabled{color:#C8CDD2;cursor:auto;}
-</style>
 
-<script id="leadingOrTrailingText" type="text/x-jquery-tmpl">
-	${firstName} <strong>${lastName}</strong> <br/>
-</script>
 
 <script type="text/javascript">
 
@@ -35,7 +22,7 @@ $(document).ready(function() {
 	function setPage(pageIndex,pages){
 		
 		
-		$("#Pagination").empty();
+		//$("#Pagination").empty();
 		 
 	    $("#Pagination").createPage({
 	        pageCount:pages,
@@ -130,7 +117,7 @@ $(document).ready(function() {
 				</div>
 
 
-				<div style="float:right;padding-top:10px;"  id="Pagination" class="pager"></div>
+				<div style="float:right;padding-top:10px;"  id="Pagination" class="pagination"></div>
     
 
     
