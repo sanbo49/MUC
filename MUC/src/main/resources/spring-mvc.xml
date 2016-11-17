@@ -54,5 +54,10 @@
         <!-- 内存中的最大值 -->
         <property name="maxInMemorySize" value="40960" />  
     </bean> 
+    
+    
+
+    
+    
 
 </beans>
