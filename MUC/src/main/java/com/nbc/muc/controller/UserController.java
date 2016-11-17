@@ -19,7 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nbc.common.BaseController;
 import com.nbc.common.BeanUtil;
@@ -53,7 +55,7 @@ public class UserController extends BaseController implements IBaseController {
 	@RequestMapping("/add")
 	public String add(@Valid @ModelAttribute User user,BindingResult result,Model model, HttpServletResponse response,Errors errors){
 		
-		userValidation.validate(user, result);
+		userValidation.validateAdd(user, result);
 		JSONObject jsonObject=new JSONObject();
 		if (result.hasErrors()) {
 			jsonObject.put("success", false);
@@ -73,6 +75,38 @@ public class UserController extends BaseController implements IBaseController {
 		}
 		return null;
 	}
+	
+	@RequestMapping("/forupdate")
+	public String forupdate(@RequestParam("userid")  final Integer userId,Model model){
+		User user=this.userService.getUserById(userId);
+		model.addAttribute(user);
+		return "user/update";
+	}
+	
+	@RequestMapping("/update")
+	public String update(@Valid @ModelAttribute User user,BindingResult result,Model model, HttpServletResponse response,Errors errors){
+		
+		userValidation.validateUpdate(user, result);
+		JSONObject jsonObject=new JSONObject();
+		if (result.hasErrors()) {
+			jsonObject.put("success", false);
+			jsonObject.put("msg", result.getFieldError().getDefaultMessage());
+		} else {
+			int i=this.userService.update(user);
+			log.info("return value:"+i);
+			jsonObject.put("success", true);
+		}
+
+		try {
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().write(jsonObject.toString());
+			response.getWriter().flush();
+		}catch(Exception e) {
+			log.info("error");
+		}
+		return null;
+	}
+	
 	
 	@RequestMapping("/page")
 	public void page(HttpSession session,HttpServletRequest request, HttpServletResponse response) throws Exception{

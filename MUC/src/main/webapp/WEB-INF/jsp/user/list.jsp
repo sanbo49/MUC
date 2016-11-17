@@ -65,7 +65,7 @@ $(document).ready(function() {
 			<td>{{= id}}</td>
 			<td>{{= userName}}</td>
 			<td align="center">{{= age}}</td>
-			<td align="center"><a href="nav.php?rec=edit&id=1">编辑</a> |
+			<td align="center"><a href="user/forupdate?userid={{= id}}">编辑</a> |
 				<a href="nav.php?rec=del&id=1">删除</a></td>
 		</tr>
 </script>
@@ -87,7 +87,7 @@ $(document).ready(function() {
    <!-- 当前位置 -->
 <div id="urHere">DouPHP 管理中心<b>></b><strong>用户管理</strong> </div>   
 <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
-    <h3><a href="addnav.html" class="actionBtn">添加用户</a>用户管理</h3>
+    <h3><a href="user/foradd" class="actionBtn">添加用户</a>用户管理</h3>
     
     <form id="myform" action="user/page" class="queryForm">
     	<input type="text" name="userName" value="" placeholder="姓名"/>

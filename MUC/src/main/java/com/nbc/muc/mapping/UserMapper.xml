@@ -25,13 +25,13 @@ readOnly="false"
     where id = #{id,jdbcType=INTEGER}
   </select>
   
-    <select id="selectAll" resultMap="BaseResultMap"  useCache="true">
+    <select id="selectAll" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
     from user_t
   </select>
   
-    <select id="queryUsers" parameterType="java.lang.String" resultMap="BaseResultMap"  useCache="true" >
+    <select id="queryUsers" parameterType="java.lang.String" resultMap="BaseResultMap"  >
     	${_parameter}
   </select>
   
@@ -96,7 +96,6 @@ readOnly="false"
   <update id="updateByPrimaryKey" parameterType="com.nbc.muc.pojo.User" >
     update user_t
     set user_name = #{userName,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
       age = #{age,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>

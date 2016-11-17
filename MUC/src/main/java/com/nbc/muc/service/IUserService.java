@@ -17,5 +17,6 @@ public interface IUserService {
 			Integer pageSize,String sql);
 
 	public int insert(User user);
+	public int update(User user);
 	
 }

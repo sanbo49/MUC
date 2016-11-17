@@ -83,7 +83,10 @@ public class UserServiceImpl implements IUserService {
 		
 	}
 	
-
+	public int update(User user) {
+		return userDao.updateByPrimaryKey(user);
+		
+	}
 
 
 	

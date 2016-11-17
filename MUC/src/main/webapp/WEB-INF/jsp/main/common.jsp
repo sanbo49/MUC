@@ -20,3 +20,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <link rel="stylesheet" type="text/css" href="static/js/pagination/pagination.css"/>
 <!-- jQuery-Templates -->
 <script type="text/javascript" language="javascript" src="static/js/jQuery-Templates/jquery.tmpl.min.js"></script>
+
+<!-- jQuery-Validation-Engine-master -->
+<link href="static/js/jQuery-Validation-Engine-master/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" language="javascript" src="static/js/jQuery-Validation-Engine-master/js/languages/jquery.validationEngine-zh_CN.js" charset="utf-8"></script>
+<script type="text/javascript" language="javascript" src="static/js/jQuery-Validation-Engine-master/js/jquery.validationEngine.js" charset="utf-8"></script>
