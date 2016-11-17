@@ -1,12 +1,21 @@
 package com.nbc.muc.pojo;
 
-public class User {
-    private Integer id;
+import java.io.Serializable;
+
+public class User implements Serializable  {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Integer id;
 
     private String userName;
 
     private String password;
 
+    private String confirmPassword;
+    
     private Integer age;
 
     public Integer getId() {
@@ -40,4 +49,12 @@ public class User {
     public void setAge(Integer age) {
         this.age = age;
     }
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
 }

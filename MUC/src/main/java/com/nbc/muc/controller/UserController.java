@@ -7,17 +7,25 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import net.sf.json.JSONObject;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.nbc.common.BaseController;
 import com.nbc.common.BeanUtil;
 import com.nbc.common.IBaseController;
 import com.nbc.common.PagedResult;
+import com.nbc.common.RedisService;
 import com.nbc.muc.pojo.User;
 import com.nbc.muc.service.IUserService;
 
@@ -27,15 +35,45 @@ import com.nbc.muc.service.IUserService;
 public class UserController extends BaseController implements IBaseController {
 	@Resource
 	private IUserService userService;
+	 @Autowired
+	 private UserValidation userValidation; // 用户自定义验证
 	
 	private static Logger log=Logger.getLogger(UserController.class);
 	
 	@RequestMapping("/list")
 	public String list(HttpServletRequest request,Model model){
-//		PagedResult<User> pageResult= this.userService.getUserAll(2,10);
-//		return responseSuccess(pageResult);
 		return "user/list";
 	}
+	
+	@RequestMapping("/foradd")
+	public String foradd(HttpServletRequest request,Model model){
+		return "user/add";
+	}
+	
+	@RequestMapping("/add")
+	public String add(@Valid @ModelAttribute User user,BindingResult result,Model model, HttpServletResponse response,Errors errors){
+		
+		userValidation.validate(user, result);
+		JSONObject jsonObject=new JSONObject();
+		if (result.hasErrors()) {
+			jsonObject.put("success", false);
+			jsonObject.put("msg", result.getFieldError().getDefaultMessage());
+		} else {
+			int i=this.userService.insert(user);
+			log.info("return value:"+i);
+			jsonObject.put("success", true);
+		}
+
+		try {
+			response.setCharacterEncoding("utf-8");
+			response.getWriter().write(jsonObject.toString());
+			response.getWriter().flush();
+		}catch(Exception e) {
+			log.info("error");
+		}
+		return null;
+	}
+	
 	@RequestMapping("/page")
 	public void page(HttpSession session,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
@@ -54,7 +92,10 @@ public class UserController extends BaseController implements IBaseController {
 			pageSize=Integer.parseInt(request.getParameter("pageSize").toString());
 		}
 		try {
-			PagedResult<User> pageResult = this.userService.queryUsers(pageNumber, pageSize, sql);
+			//PagedResult<User> pageResult = this.userService.queryUsers(pageNumber, pageSize, sql);
+			
+			PagedResult<User> pageResult = this.userService.getUserAll(pageNumber, pageSize);
+			
 			  response.setCharacterEncoding("utf-8");
 			  response.getWriter().write(responseSuccess(pageResult));
 			  response.getWriter().flush();
@@ -78,4 +119,7 @@ public class UserController extends BaseController implements IBaseController {
 		}
 		return sb.toString();
 	}
+
+	
+	
 }

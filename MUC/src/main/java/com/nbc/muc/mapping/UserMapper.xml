@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.nbc.muc.dao.IUserDao" >
+ 
+<cache type="com.nbc.common.redis.RedisCache"
+eviction="LRU"  
+flushInterval="6000000"  
+size="1024"  
+readOnly="false"  
+/>
+
   <resultMap id="BaseResultMap" type="com.nbc.muc.pojo.User" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
@@ -17,13 +25,13 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   
-    <select id="selectAll" resultMap="BaseResultMap"  >
+    <select id="selectAll" resultMap="BaseResultMap"  useCache="true">
     select 
     <include refid="Base_Column_List" />
     from user_t
   </select>
   
-    <select id="queryUsers" parameterType="java.lang.String" resultMap="BaseResultMap"  >
+    <select id="queryUsers" parameterType="java.lang.String" resultMap="BaseResultMap"  useCache="true" >
     	${_parameter}
   </select>
   
@@ -34,9 +42,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.nbc.muc.pojo.User" >
-    insert into user_t (id, user_name, password, 
+    insert into user_t (user_name, password, 
       age)
-    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{age,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.nbc.muc.pojo.User" >

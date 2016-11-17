@@ -15,5 +15,7 @@ public interface IUserService {
 	
 	public PagedResult<User> queryUsers(Integer pageNumber,  
 			Integer pageSize,String sql);
+
+	public int insert(User user);
 	
 }
