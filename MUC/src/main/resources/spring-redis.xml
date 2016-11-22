@@ -10,6 +10,20 @@
 
     <context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>
 	 
+	 
+	 
+	 	
+	 
+	 <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+    <property name="maxIdle" value="${redis.maxIdle}" />  
+    <property name="maxTotal" value="${redis.maxActive}" />    
+    <property name="maxWaitMillis" value="${redis.maxWait}" />   
+    <property name="testOnBorrow" value="${redis.testOnBorrow}" />  
+    <property name="testOnReturn" value="${redis.testOnReturn}" />  
+</bean>  
+	       
+
+	  <!-- 
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
      
         <property name="maxIdle" value="${redis.maxIdle}" />  
@@ -17,7 +31,7 @@
         <property name="maxWait" value="${redis.maxWait}" />  
         <property name="testOnBorrow" value="${redis.testOnBorrow}" />
     </bean>  
-             
+       --> 
     <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"  
         p:host-name="${redis.host}" 
         p:port="${redis.port}" 
@@ -27,10 +41,35 @@
 	<bean id="redisCacheTransfer" class="com.nbc.common.redis.RedisCacheTransfer">
 		<property name="jedisConnectionFactory" ref="jedisConnectionFactory" />
 	</bean>
-
+ <!-- 
     <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">  
         <property name="connectionFactory"   ref="jedisConnectionFactory" />  
-    </bean>         
+    </bean>
+  -->
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">    
+        <property name="connectionFactory" ref="jedisConnectionFactory" />    
+    </bean>  
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
        <!-- 
     <bean id="userDao" class="com.x.dao.impl.UserDao" />
      -->   

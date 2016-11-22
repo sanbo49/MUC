@@ -9,6 +9,8 @@ import javax.annotation.Resource;
 
 import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -35,6 +37,8 @@ public class UserServiceImpl implements IUserService {
 	private RedisTemplate<Serializable, Serializable> redisTemplate;
 	
 //	@Override
+	
+	@Cacheable(value="accountCache")// 缓存名叫 accountCache 
 	public User getUserById(int userId) {
 		// TODO Auto-generated method stub
 		return this.userDao.selectByPrimaryKey(userId);
@@ -82,10 +86,9 @@ public class UserServiceImpl implements IUserService {
 		return userDao.insert(user);
 		
 	}
-	
+	@CacheEvict(value="accountCache",beforeInvocation=true)
 	public int update(User user) {
 		return userDao.updateByPrimaryKey(user);
-		
 	}
 
 
