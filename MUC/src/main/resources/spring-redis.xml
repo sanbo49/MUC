@@ -13,7 +13,7 @@
 	 
 	 
 	 	
-	 
+	 <!-- 新版本的jredis参数名称不一样 -->
 	 <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
     <property name="maxIdle" value="${redis.maxIdle}" />  
     <property name="maxTotal" value="${redis.maxActive}" />    
@@ -23,7 +23,7 @@
 </bean>  
 	       
 
-	  <!-- 
+	  <!-- 老版本的jredis参数名称不一样 
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
      
         <property name="maxIdle" value="${redis.maxIdle}" />  
@@ -53,7 +53,24 @@
 
 
 
+<!-- 配置redis客户端集群版 -->  
+    <bean name="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig" >
+        <property name="maxWaitMillis" value="-1" />
+        <property name="maxTotal" value="1000" />
+        <property name="minIdle" value="8" />
+        <property name="maxIdle" value="100" />
+    </bean>
 
+    <bean id="jedisCluster" class="com.nbc.common.redis.JedisClusterFactory">
+        <property name="addressConfig">
+            <value>classpath:connect-redis.properties</value>
+        </property>
+        <property name="addressKeyPrefix" value="address" />
+
+        <property name="timeout" value="300000" />
+        <property name="maxRedirections" value="6" />
+        <property name="genericObjectPoolConfig" ref="genericObjectPoolConfig" />
+    </bean>
 
 
     
