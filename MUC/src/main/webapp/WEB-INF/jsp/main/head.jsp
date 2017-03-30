@@ -24,7 +24,7 @@
       <a href="manager.php?rec=cloud_account">设置云账户</a>
      </div>
     </li>
-    <li class="noRight"><a href="login.php?rec=logout">退出</a></li>
+    <li class="noRight"><a href="logout">退出</a></li>
    </ul>
   </div>
  </div>

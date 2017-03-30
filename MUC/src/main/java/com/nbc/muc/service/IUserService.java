@@ -18,5 +18,12 @@ public interface IUserService {
 
 	public int insert(User user);
 	public int update(User user);
+	public int delete(int userId);
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	public User getByAccount(String name);
 	
 }

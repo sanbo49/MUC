@@ -1,6 +1,7 @@
 package com.nbc.muc.controller;
 
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
@@ -39,5 +40,14 @@ public class UserValidation {
 					"lengthOfUser.registration.userName",
 					"User Name must not more than 50 characters.");
 		}
+	}
+
+	/**
+	 * @param userId
+	 * @param result
+	 */
+	public void validateDelete(Integer userId, Errors errors) {
+		// 检查登陆用户不能删除
+		
 	}
 }

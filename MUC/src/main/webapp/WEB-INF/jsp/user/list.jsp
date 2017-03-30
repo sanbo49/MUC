@@ -58,6 +58,31 @@ $(document).ready(function() {
 		pageselectCallback(page_index,page_sizes);
 	}
 	
+	function delUserById(id){
+		$.ajax({
+		    url:'user/delete',
+		    type:'POST', //GET
+		    data:{
+		        userid:id
+		    },
+		    timeout:5000,    //超时时间
+		    dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+		    success:function(data){
+		        alert('删除成功');
+		        pageselectCallback(page_index,page_sizes);
+		    },
+		    error:function(xhr,textStatus){
+		        console.log('错误');
+		        console.log(xhr);
+		        console.log(textStatus);
+		    },
+		    complete:function(){
+		        console.log('结束');
+		    }
+		});
+	}
+	
+	
 </script>
 
 <script id="sometmpl" type="text/x-jquery-tmpl">
@@ -66,7 +91,7 @@ $(document).ready(function() {
 			<td>{{= userName}}</td>
 			<td align="center">{{= age}}</td>
 			<td align="center"><a href="user/forupdate?userid={{= id}}">编辑</a> |
-				<a href="nav.php?rec=del&id=1">删除</a></td>
+				<a href="javascript:void(0);" onclick="delUserById({{= id}})">删除</a></td>
 		</tr>
 </script>
 
