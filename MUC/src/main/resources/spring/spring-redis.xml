@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">  
+
+    <context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>
+	 
+	 
+	 
+	 	
+	 <!-- 新版本的jredis参数名称不一样 -->
+	 <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+    <property name="maxIdle" value="${redis.maxIdle}" />  
+    <property name="maxTotal" value="${redis.maxActive}" />    
+    <property name="maxWaitMillis" value="${redis.maxWait}" />   
+    <property name="testOnBorrow" value="${redis.testOnBorrow}" />  
+    <property name="testOnReturn" value="${redis.testOnReturn}" />  
+</bean>  
+	       
+
+	  <!-- 老版本的jredis参数名称不一样 
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+     
+        <property name="maxIdle" value="${redis.maxIdle}" />  
+        <property name="maxActive" value="${redis.maxActive}" />  
+        <property name="maxWait" value="${redis.maxWait}" />  
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+    </bean>  
+       --> 
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"  
+        p:host-name="${redis.host}" 
+        p:port="${redis.port}" 
+        p:password="${redis.pass}"  
+        p:pool-config-ref="poolConfig"/>
+<!--    -->
+	<bean id="redisCacheTransfer" class="com.nbc.common.redis.RedisCacheTransfer">
+		<property name="jedisConnectionFactory" ref="jedisConnectionFactory" />
+	</bean>
+ <!-- 
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">  
+        <property name="connectionFactory"   ref="jedisConnectionFactory" />  
+    </bean>
+  -->
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">    
+        <property name="connectionFactory" ref="jedisConnectionFactory" />    
+    </bean>  
+
+
+
+<!-- 配置redis客户端集群版 -->  
+    <bean name="genericObjectPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig" >
+        <property name="maxWaitMillis" value="-1" />
+        <property name="maxTotal" value="1000" />
+        <property name="minIdle" value="8" />
+        <property name="maxIdle" value="100" />
+    </bean>
+
+    <bean id="jedisCluster" class="com.nbc.common.redis.JedisClusterFactory">
+        <property name="addressConfig">
+            <value>classpath:connect-redis.properties</value>
+        </property>
+        <property name="addressKeyPrefix" value="address" />
+
+        <property name="timeout" value="300000" />
+        <property name="maxRedirections" value="6" />
+        <property name="genericObjectPoolConfig" ref="genericObjectPoolConfig" />
+    </bean>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       <!-- 
+    <bean id="userDao" class="com.x.dao.impl.UserDao" />
+     -->   
+</beans>  

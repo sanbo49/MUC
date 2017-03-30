@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd">  
+             <!-- 启用shrio授权注解拦截方式 -->  
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">  
+        <property name="securityManager" ref="securityManager" />  
+        <property name="successUrl" value="/user/list" />  
+        <property name="loginUrl" value="/login" />  
+        <property name="unauthorizedUrl" value="/error" />  
+        <property name="filters">  
+            <map>  
+            
+                <!--  <entry key="authc" value-ref="shiro"></entry>  -->
+                 
+               <entry key="authc" value-ref="CaptchaFormAuthenticationFilter"></entry>
+                
+                
+                <entry key="logout" value-ref="logoutFilter" />
+            </map>  
+        </property>  
+        <property name="filterChainDefinitions">  
+            <value>  
+				/logout = logout
+				/login = authc
+				/dologin = anon
+				/error =anon       
+				/static/** = anon
+				/** = user
+                <!-- 
+                /submit.htm=anon  
+                /error.htm=anon  
+                /member/**=authc,roles["member"]  
+                 -->
+            </value>  
+        </property>  
+    </bean>  
+    <bean id="shiro" class="com.nbc.common.shiro.ShiroFilter"/>  
+    
+    
+    
+    <!-- 基于Form表单的身份验证过滤器，不配置将也会注册此过虑器，表单中的用户账号、密码及loginurl将采用默认值，建议配置 -->  
+    <bean id="CaptchaFormAuthenticationFilter" class="com.nbc.common.shiro.CaptchaFormAuthenticationFilter ">  
+        <!-- 表单中账号的input名称 -->  
+        <property name="usernameParam" value="username" />  
+        <!-- 表单中密码的input名称 -->  
+        <property name="passwordParam" value="password" />  
+        <!-- 表单中记住我的input名称 -->  
+        <property name="rememberMeParam" value="rememberMe"/>  
+    </bean>  
+    
+  
+    <bean id="shiroRealm" class="com.nbc.common.shiro.ShiroRealm" >
+        <property name="authorizationCacheName" value="authorizationcache" />  
+        <property name="credentialsMatcher" ref="credentialsMatcher" />  
+    </bean>  
+      <!--4 凭证匹配器 -->  
+    <bean id="credentialsMatcher"  
+          class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">  
+        <property name="hashAlgorithmName" value="md5" />  
+        <property name="hashIterations" value="1" />  
+    </bean>  
+    
+  <!-- remenberMe配置 -->
+   <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+       <constructor-arg value="rememberMe" />
+       <property name="httpOnly" value="true" />
+       <!-- 默认记住7天（单位：秒） -->
+       <property name="maxAge" value="604800" />
+   </bean>
+   <!-- rememberMe管理器 -->
+   <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+       <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
+       <property name="cookie" ref="rememberMeCookie" />
+   </bean>
+     
+    <!-- 定义Shiro安全管理配置     -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="shiroRealm" />
+        <property name="rememberMeManager" ref="rememberMeManager" />
+         <property name="cacheManager" ref="cacheManager"/>  
+    </bean>
+    
+    
+    
+    
+       <!-- 缓存管理器 使用Ehcache实现-->  
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">  
+        <property name="cacheManagerConfigFile" value="classpath:spring/ehcache-shiro.xml"/>  
+    </bean>  
+
+
+    
+    <!-- 退出过滤器 -->
+    <bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+     <property name="redirectUrl" value="/login" />
+	</bean>
+    
+  
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />  
+    <bean  
+        class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"  
+        depends-on="lifecycleBeanPostProcessor">  
+        <property name="proxyTargetClass" value="true" />  
+    </bean>  
+    <bean  
+        class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
+        <property name="securityManager" ref="securityManager" />  
+    </bean>  
+</beans>  
